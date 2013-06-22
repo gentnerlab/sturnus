@@ -1,0 +1,6 @@
+Django==1.4.1
+South==0.7.6
+django-uuidfield==0.4.0
+django-grappelli==2.4.0
+django-tastypie==0.9.11
+fabric==1.4.3
