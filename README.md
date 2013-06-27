@@ -7,7 +7,7 @@ django database &amp; website for experiment data
 
 1. make sure you are running Python 2.7
 2. install virtualenv & virtualenvwrapper
-3. make sure you [have access to pg_config locally]([)https://www.google.com/search?q=psycopg2+pg_config+executable+not+found) 
+3. make sure you [have access to pg_config locally](https://www.google.com/search?q=psycopg2+pg_config+executable+not+found) 
 4. then, setup your virtual environment
 ```bash
 mkvirtualenv --no-site-packages --distribute sturnus
