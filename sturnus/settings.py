@@ -1,7 +1,11 @@
 # Django settings for sturnus project.
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+
+# tastypie settings
+TASTYPIE_FULL_DEBUG = DEBUG
+TASTYPIE_DEFAULT_FORMATS = ['json','xml']
 
 ADMINS = (
     #('Name', 'name@example.com'),
@@ -137,6 +141,7 @@ INSTALLED_APPS = (
     'south',
     'sturnus',
     'tastypie',
+    'django_neo',
 )
 
 # Grappelli settings

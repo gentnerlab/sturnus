@@ -8,11 +8,6 @@ admin.autodiscover()
 
 v1_api = Api(api_name='v1')
 v1_api.register(SubjectResource())
-v1_api.register(BlockResource())
-v1_api.register(TrialResource())
-v1_api.register(BehaviorTrialResource())
-v1_api.register(EventResource())
-v1_api.register(EventTypeResource())
 
 
 urlpatterns = patterns('',
@@ -28,6 +23,8 @@ urlpatterns = patterns('',
 
     # grappelli urls
     url(r'^grappelli/', include('grappelli.urls')),
+
+    url(r'^neo/', include('django_neo.urls')),
 
     # api urls
     url(r'^api/', include(v1_api.urls)),
