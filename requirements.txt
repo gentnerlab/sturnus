@@ -2,15 +2,17 @@ Django==1.5.1
 Fabric==1.4.3
 South==0.8.1
 argparse==1.2.1
+defusedxml==0.4.1
 distribute==0.6.28
 django-genericadmin==0.4
 django-grappelli==2.4.5
 django-model-utils==1.4.0
--e git+git@github.com:gentnerlab/django-neo.git@993b51158d2c0810fde1b8255fdf0aa866b3a7b9#egg=django_neo-dev
+-e git+git@github.com:gentnerlab/django-neo.git@17c97c64dcafbc837d68c8a5120f611631af6685#egg=django_neo-dev
 django-tastypie==0.9.15
 django-uuidfield==0.4.0
-djorm-ext-pgarray==0.6
+-e git+https://github.com/niwibe/djorm-ext-pgarray.git@303028db0d994c68845b81c15525c6a0442f5b8a#egg=djorm_ext_pgarray-dev
 docutils==0.10
+lxml==3.2.1
 mimeparse==0.1.3
 psycopg2==2.5.1
 pycrypto==2.6
