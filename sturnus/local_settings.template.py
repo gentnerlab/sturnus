@@ -6,11 +6,13 @@ ADMINS += ('Name', 'name@example.com')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', # must be a postgres database for django_neo
+        'NAME': 'db_name',
+        'USER': 'db_user',
+        'PASSWORD': 'db_user_pass',
+        'HOST': '', # Set to empty string for localhost.
+        'PORT': '5432', # 5432 is default postgres port
     }
 }
+
+STATIC_ROOT = '/home/user/www/sturnus/static/'
