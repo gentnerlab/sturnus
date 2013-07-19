@@ -7,7 +7,7 @@ distribute==0.6.28
 django-genericadmin==0.4
 django-grappelli==2.4.5
 django-model-utils==1.4.0
--e git+git@github.com:gentnerlab/django-neo.git@400e31f4aa781c81da7beda3353c5179bb1b50d1#egg=django_neo-dev
+-e git+git@github.com:gentnerlab/django-neo.git@edca893491a9952fcc9455c70fb0a794188a7e80#egg=django_neo-dev
 django-tastypie==0.9.15
 django-uuidfield==0.4.0
 -e git+https://github.com/niwibe/djorm-ext-pgarray.git@303028db0d994c68845b81c15525c6a0442f5b8a#egg=djorm_ext_pgarray-dev
