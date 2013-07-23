@@ -1,5 +1,13 @@
 from django.db import models
-from django_neo import RecordingChannel
+from django_neo.models import RecordingChannel
+
+class ElectrodeBatch(models.Model):
+    """ a batch of electrodes """
+    order_id = models.CharField(max_length=255)
+    arrival = models.DateField(null=True)
+
+    def __unicode__(self):
+        return self.order_id
 
 class ElectrodeModel(models.Model):
     """ an electrode model 
@@ -12,7 +20,7 @@ class ElectrodeModel(models.Model):
     def __unicode__(self):
         return self.model_number
 
-class SiteModel(models.Model):
+class RecordingSiteModel(models.Model):
     """ an electrode site model
 
     x & y & z coords are in microns when facing the electrode laying flat, from the lower left 
@@ -37,28 +45,34 @@ class Electrode(models.Model):
     """
     serial_number = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
+    status = models.CharField(max_length=255,blank=True)
+    uses = models.PositiveIntegerField()
+    electrode_model = models.ForeignKey(ElectrodeModel)
+    batch = models.ForeignKey(ElectrodeBatch,null=True)
 
     def __unicode__(self):
         return self.serial_number
 
-class Site(models.Model):
+class RecordingSite(models.Model):
     """ a single physical electrode site 
 
     one recording site on a real electrode
     """
-    impedance = models.FloatField(null=True)
+    impedance = models.FloatField(null=True,blank=True)
     electrode = models.ForeignKey(Electrode)
-    electrode_pad_model = models.ForeignKey(ElectrodePadModel)
+    electrode_pad_model = models.ForeignKey(RecordingSiteModel)
     notes =  models.TextField(blank=True)
 
     def __unicode__(self):
-        return "%s:%s(%s)" % (self.electrode,self.electrode_pad_model.chan,self.impedance)
+        return "%s:%s" % (self.electrode,self.electrode_pad_model.chan)
 
-class ElectrodeRecordingChannel(RecordingChannel):
+class ExtendedRecordingChannel(RecordingChannel):
     ''' a recording channel '''
     chan = models.PositiveIntegerField()
-    gain = models.FloatField(null=True)
-    filter_high = models.FloatField(null=True)
-    filter_low = models.FloatField(null=True)
+    gain = models.FloatField(null=True,blank=True)
+    filter_high = models.FloatField(null=True,blank=True)
+    filter_low = models.FloatField(null=True,blank=True)
 
-    site = models.ForeignKey(Site)
+    site = models.ForeignKey(RecordingSite)
+    def __unicode__(self):
+        return "%s" % (self.chan)
