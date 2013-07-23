@@ -15,7 +15,14 @@ class RecordingSiteModelAdmin(admin.ModelAdmin):
 admin.site.register(RecordingSiteModel,RecordingSiteModelAdmin)
     
 class ElectrodeAdmin(admin.ModelAdmin):
-    pass
+    list_display = (
+        'serial_number',
+        'electrode_model',
+        'batch',
+        'status',
+        'uses',
+        'notes',
+        )
 admin.site.register(Electrode,ElectrodeAdmin)
 
 class RecordingSiteAdmin(admin.ModelAdmin):
@@ -25,4 +32,8 @@ admin.site.register(RecordingSite,RecordingSiteAdmin)
 class ExtendedRecordingChannelAdmin(admin.ModelAdmin):
     pass
 admin.site.register(ExtendedRecordingChannel,ExtendedRecordingChannelAdmin)
+
+class ElectrodeBatchAdmin(admin.ModelAdmin):
+    pass
+admin.site.register(ElectrodeBatch,ElectrodeBatchAdmin)
 
