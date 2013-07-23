@@ -142,6 +142,7 @@ INSTALLED_APPS = (
     'sturnus',
     'tastypie',
     'django_neo',
+    'electrode_inventory',
 )
 
 # Grappelli settings
