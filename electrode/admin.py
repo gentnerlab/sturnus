@@ -1,5 +1,5 @@
 from django.contrib import admin
-from electrode_inventory.models import *
+from electrode.models import *
 
 
 
