@@ -1,34 +1,6 @@
 from django.db import models
 from django_neo import Event, Lookup
 
-# Create your models here.
-
-class Subject(models.Model):
-    """ an experimental subject 
-
-    subjects can have the following:
-    - name [CharField] (unique)
-    - sex [CharField]
-
-    for consideration:
-    - origin (a location, e.g. LAX)
-    - acquisiton date
-    - age at acquisition
-
-    """
-    name = models.CharField(max_length=255,
-                            unique=True)
-    SEX_CHOICES = (
-        ('M', 'male'),
-        ('F', 'female'),
-        ('U', 'unknown'),
-        )
-    sex = models.CharField(max_length=1,
-                           choices=SEX_CHOICES,
-                           default='U')
-
-    def __unicode__(self):
-        return self.name
 
 class ProtocolType(Lookup):
     ''' what type of protocol is this? '''

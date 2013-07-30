@@ -13,16 +13,13 @@ class Subject(models.Model):
     - age at acquisition
 
     """
-    name = models.CharField(max_length=100,
-                            unique=True)
+    name = models.CharField(max_length=255,unique=True)
     SEX_CHOICES = (
         ('M', 'male'),
         ('F', 'female'),
         ('U', 'unknown'),
         )
-    sex = models.CharField(max_length=1,
-                           choices=SEX_CHOICES,
-                           default='U')
+    sex = models.CharField(max_length=1,choices=SEX_CHOICES,default='U')
 
     def __unicode__(self):
         return self.name
