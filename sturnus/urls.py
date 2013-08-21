@@ -1,14 +1,12 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 from tastypie.api import Api
-from sturnus.api import *
 
 
 admin.autodiscover()
 
 v1_api = Api(api_name='v1')
-v1_api.register(SubjectResource())
-
 
 urlpatterns = patterns('',
     # Examples:
@@ -24,8 +22,11 @@ urlpatterns = patterns('',
     # grappelli urls
     url(r'^grappelli/', include('grappelli.urls')),
 
-    url(r'^neo/', include('django_neo.urls')),
+    url(r'^broab/', include('broab.urls')),
 
     # api urls
     url(r'^api/', include(v1_api.urls)),
+
+    url(r'^$', RedirectView.as_view(url='/admin/'), name='go-to-admin')
+
 )

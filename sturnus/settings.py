@@ -5,7 +5,7 @@ TEMPLATE_DEBUG = DEBUG
 
 # tastypie settings
 TASTYPIE_FULL_DEBUG = DEBUG
-TASTYPIE_DEFAULT_FORMATS = ['json','xml']
+TASTYPIE_DEFAULT_FORMATS = ['json']
 
 ADMINS = (
     #('Name', 'name@example.com'),
@@ -139,10 +139,14 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'south',
-    'sturnus',
     'tastypie',
-    'django_neo',
+    'sturnus',
+    'utils',
+    'broab',
     'electrode',
+    'husbandry',
+    'extracellular',
+    'operant',
 )
 
 # Grappelli settings
