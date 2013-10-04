@@ -12,6 +12,14 @@ admin.site.register(CoordinateSystem,CoordinateSystemAdmin)
 
 class PenetrationAdmin(admin.ModelAdmin):
     list_display = ('hemisphere','rostral','lateral','subject','electrode',)
+    list_filter = (
+        'subject',
+        'subject__sex',
+        'electrode',
+        'hemisphere',
+        'rostral',
+        'lateral',
+        )
     fieldsets = (
         (None, {
             'fields': ('subject','electrode',),
@@ -30,10 +38,25 @@ class PenetrationAdmin(admin.ModelAdmin):
          }),
         )
     readonly_fields = ('created','modified')
+    search_fields = [
+        'name',
+        'description',
+        'annotations',
+        'file_origin',
+        'subject__name',
+        'electrode__serial_number',
+        'electrode__notes',
+        'electrode__status',
+        ]
 admin.site.register(Penetration,PenetrationAdmin)
 
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('depth','penetration')
+    list_filter = (
+        'penetration',
+        'depth',
+        'blocks',
+        )
     fieldsets = (
         (None, {
             'fields': (('penetration','depth'),'blocks'),
@@ -50,6 +73,20 @@ class LocationAdmin(admin.ModelAdmin):
         )
     filter_horizontal = ['blocks']
     readonly_fields = ('created','modified')
+    search_fields = [
+        'name',
+        'description',
+        'annotations',
+        'file_origin',
+        'penetration__name',
+        'penetration__description',
+        'penetration__annotations',
+        'penetration__file_origin',
+        'block__name',
+        'block__description',
+        'block__annotations',
+        'block__file_origin',
+        ]
 admin.site.register(Location,LocationAdmin)
 
 class SortQualityMethodAdmin(admin.ModelAdmin):
@@ -103,6 +140,8 @@ class UnitAdmin(admin.ModelAdmin):
         ]
     # inlines = [SpikeTrainInline,]
     readonly_fields = ('created','modified')
+    class Media:
+        js = ('/js/jquery.sparkline.min.js',)
 admin.site.register(Unit,UnitAdmin)
 
 class PopulationAdmin(admin.ModelAdmin):
@@ -120,5 +159,6 @@ class PopulationAdmin(admin.ModelAdmin):
             'fields': (('created','modified'),),
          }),
         )
+    filter_horizontal = ['units']
     readonly_fields = ('created','modified')
 admin.site.register(Population,PopulationAdmin)
