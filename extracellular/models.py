@@ -22,8 +22,8 @@ class Penetration(BroabModel):
     """
 
     HEMISPHERE_CHOICES = (
-        ('R','right'),
-        ('L', 'left'),
+        ('R','Right'),
+        ('L', 'Left'),
         )
     hemisphere = models.CharField(max_length=1,
                                   choices=HEMISPHERE_CHOICES)
