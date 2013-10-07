@@ -31,3 +31,13 @@ class Subject(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class Observation(models.Model):
+
+    subject = models.ForeignKey(Subject)
+    datetime = models.DateTimeField()
+    notes = models.TextField(blank=True)
+    weight = models.FloatField(null=True,blank=True)
+
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
