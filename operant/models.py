@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.signals import post_init
 from broab.models import Lookup, BroabModel
 from broab.models import Event, EventLabel
+from husbandry.models import Subject
 
 
 class ProtocolType(Lookup):
@@ -29,6 +30,13 @@ class TrialSet(BroabModel):
     '''
 
     protocol = models.ForeignKey(Protocol,null=True,blank=True)
+    subject = models.ForeignKey(Subject)
+
+    # def accuracy(self):
+    #     pass
+
+    # def d_prime(self):
+    #     pass
 
     def __unicode__(self):
         return self.name
@@ -71,10 +79,9 @@ class Trial(Event):
     
     reinforced = models.NullBooleanField()
 
+    # reaction_time = models.FloatField(null=True,blank=True)
+
     trial_set = models.ForeignKey(TrialSet)
-
-   
-
 
     def __unicode__(self):
         return "%s" % (self.index)
