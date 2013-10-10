@@ -4,7 +4,7 @@ from neo import core
 from pytz import timezone
 from django.utils import timezone as tz
 from django.core.management.base import BaseCommand, CommandError
-from broab.models import models
+from broab import models
 from extracellular.models import CoordinateSystem, Penetration, Location, Unit
 from electrode.models import Electrode
 from husbandry.models import Subject
@@ -82,7 +82,7 @@ def create_recording_channel(neo_recording_channel,recording_channel_group=None)
 
 def create_unit(neo_unit,recording_channel_group=None):
     """creates recording channel from a neo recording channel"""
-    unit = models.Unit()
+    unit = Unit()
     if neo_unit.name is not None:
         unit.name = unit.name
     if neo_unit.description is not None:
@@ -128,46 +128,15 @@ def create_event(neo_event,segment):
     except AttributeError:
         pass
 
-    event_type, created = models.EventType.objects.get_or_create(name=neo_event.label)
+    event_label, created = models.EventLabel.objects.get_or_create(
+        name=':'.join([neo_event.label,neo_event.name])
+        )
 
-    event.label = event_type
+    event.label = event_label
     event.segment = segment
 
     return event
 
-def create_analog_signal(neo_analog_signal,segment,recording_channel=None):
-    analog_signal = models.AnalogSignal()
-    if neo_analog_signal.name is not None:
-        analog_signal.name = neo_analog_signal.name
-    if neo_analog_signal.description is not None:
-        analog_signal.description = neo_analog_signal.description
-    if neo_analog_signal.file_origin is not None:
-        analog_signal.file_origin = neo_analog_signal.file_origin
-    analog_signal.annotations = clean_annotations(neo_analog_signal.annotations)
-
-    t_units = 's'
-    t_start = neo_analog_signal.t_start.rescale(t_units)
-    analog_signal.t_start = float(t_start)
-    analog_signal.t_units = t_units
-
-    try:
-        signal_units = 'V'
-        signal = neo_analog_signal.signal.rescale(signal_units)
-    except ValueError, e:
-        signal_units = 'A'
-        signal = neo_analog_signal.signal.rescale(signal_units)
-        
-    analog_signal.signal = signal
-    analog_signal.signal_units = signal_units
-    if neo_analog_signal.sampling_rate is not None:
-        analog_signal.sampling_rate = neo_analog_signal.sampling_rate
-    elif neo_analog_signal.sampling_period is not None:
-        analog_signal.sampling_rate = 1.0 / neo_analog_signal.sampling_period
-
-    analog_signal.segment = segment
-    if recording_channel is not None:
-        analog_signal.recording_channel = recording_channel
-    return analog_signal
 
 def create_spike_train(neo_spike_train,segment_id,unit_id=None):
     spike_train = models.SpikeTrain()   
@@ -244,12 +213,32 @@ class Command(BaseCommand):
                 # block
                 self.stdout.write('Reading block(s)...')
                 for bl in reader.read_all_blocks():
-                    block = create_block(bl)
-                    block.save()
-                    bl.annotate(django_pk=block.pk)
-                    self.stdout.write('Successfully saved block "%s"(pk=%s)' % (block,block.pk))
 
                     # make a location & penetration for this block, too
+                    subject, created = Subject.objects.get_or_create(name=bl.annotations.pop('subject'))
+                    electrode, created = Electrode.objects.get_or_create(
+                        serial_number=bl.annotations.pop('electrode_serial'),
+                        notes=bl.annotations.pop('electrode_model'),
+                        )
+                    penetration, created = Penetration.objects.get_or_create(
+                        hemisphere=bl.annotations.pop('electrode_hemisphere')[0],
+                        rostral=bl.annotations.pop('electrode_rostral'),
+                        lateral=bl.annotations.pop('electrode_lateral'),
+                        alpha_angle=bl.annotations.pop('electrode_alpha'),
+                        electrode=electrode,
+                        subject=subject,
+                        )
+                    location, created = Location.objects.get_or_create(
+                        depth=bl.annotations.pop('electrode_depth'),
+                        penetration=penetration,
+                        )
+
+                    block = create_block(bl)
+                    block.save()
+                    location.blocks.add(block)
+
+                    bl.annotate(django_pk=block.pk)
+                    self.stdout.write('Successfully saved block "%s"(pk=%s)' % (block,block.pk))
 
                     # recording channel groups
                     if core.recordingchannelgroup.RecordingChannelGroup in reader.readable_objects:
@@ -347,3 +336,4 @@ class Command(BaseCommand):
 
                             # for ansig_array in seg.analogsignalarrays:
                             #     analog_signal_list = create_analog_signal_from_array(ansig_array,segment)
+            reader.close()  
