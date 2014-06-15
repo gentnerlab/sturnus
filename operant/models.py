@@ -3,6 +3,7 @@ from django.db.models.signals import post_init
 from broab.models import Lookup, BroabModel
 from broab.models import Event, EventLabel
 from husbandry.models import Subject
+# from pyoperant import behavior
 
 
 class ProtocolType(Lookup):
@@ -24,19 +25,32 @@ class Protocol(BroabModel):
     def __unicode__(self):
         return self.name
 
-class TrialSet(BroabModel):
+class Session(BroabModel):
     '''container of trials
 
     '''
-
-    protocol = models.ForeignKey(Protocol,null=True,blank=True)
     subject = models.ForeignKey(Subject)
+    index = models.PositiveIntegerField(null=True,blank=True)
+    protocol = models.ForeignKey(Protocol,null=True,blank=True)
+    accuracy = models.FloatField(null=True,blank=True,help_text='Only normal trials. Ignores probes and non-responses. Updates on save.')
+    d_prime = models.FloatField(null=True,blank=True,help_text='Only normal trials. Ignores probes and non-responses. Updates on save.')
 
-    # def accuracy(self):
-    #     pass
+    # @property
+    # def confusion_matrix(self):
+    #     classes = []
+    #     responses = []
+    #     trial_set = self.trials.filter(tr_type__name__iexact='normal')\
+    #         .exclude(tr_class__name__iexact='probe')\
+    #         .exclude(tr_class__name__iexact='no response')
+    #     for trial in trial_set:
+    #         classes.append(trial.tr_class.id)
+    #         responses.append(trial.response.id)
+    #     return behavior.ConfusionMatrix(responses,classes)
 
-    # def d_prime(self):
-    #     pass
+    # def calc(self):
+    #     confusion = self.confusion_matrix
+    #     self.accuracy = confusion.acc()
+    #     self.d_prime = confusion.dprime()
 
     def __unicode__(self):
         return self.name
@@ -65,23 +79,16 @@ class Trial(Event):
     holds meta information about the trial class & subject response
 
     """
-    index = models.PositiveIntegerField(null=True)
+    session = models.ForeignKey(Session,related_name='trials')
+    index = models.PositiveIntegerField(null=True,blank=True)
 
     tr_type = models.ForeignKey(TrialType,null=True)
-    tr_class = models.ForeignKey(TrialClass,null=True,related_name='trial_set_as_class')
+    tr_class = models.ForeignKey(TrialClass,null=True,related_name='trials_as_class')
     stimulus = models.CharField(max_length=255,blank=True)
-
-    response = models.ForeignKey(TrialClass,null=True,related_name='trial_set_as_response')
-
-    def correct(self):
-        return (self.tr_class == self.response)
-    correct.boolean = True
-    
+    response = models.ForeignKey(TrialClass,null=True,related_name='trials_as_response')
+    correct = models.NullBooleanField()
     reinforced = models.NullBooleanField()
-
-    # reaction_time = models.FloatField(null=True,blank=True)
-
-    trial_set = models.ForeignKey(TrialSet)
+    reaction_time = models.FloatField(null=True,blank=True)
 
     def __unicode__(self):
         return "%s" % (self.index)

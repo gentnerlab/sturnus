@@ -2,8 +2,13 @@ from django.db import models
 
 # Create your models here.
 
-# class Location(models.Model):
-#     pass
+class Location(models.Model):
+    name = models.CharField(max_length=255,unique=True)
+    description = models.TextField(blank=True)
+
+
+    def __unicode__(self):
+        return self.name
 
 class Subject(models.Model):
     """ an experimental subject 
@@ -27,17 +32,29 @@ class Subject(models.Model):
         ('U', 'unknown'),
         )
     sex = models.CharField(max_length=1,choices=SEX_CHOICES,default='U')
-    origin = models.CharField(max_length=255,blank=True)
+    origin = models.ForeignKey(Location,null=True,related_name='subjects_from_here')
 
     def __unicode__(self):
         return self.name
 
-class Observation(models.Model):
+class Record(models.Model):
 
-    subject = models.ForeignKey(Subject)
+    subject = models.ForeignKey(Subject,related_name='records')
     datetime = models.DateTimeField()
+    intervention = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     weight = models.FloatField(null=True,blank=True)
+    health = models.CharField(max_length=255)
+    location = models.ForeignKey(Location,related_name='records')
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['datetime']
+        get_latest_by = "datetime"
+
+    def __unicode__(self):
+        return "%s: %s" % (self.datetime.ctime(),self.intervention)
+
+

@@ -1,6 +1,6 @@
 from django.db import models
 from broab.models import Block, Unit, AnalogSignal
-from broab.models import Unit as BroabUnit
+# from broab.models import Unit as BroabUnit
 from broab.models import Lookup, BroabModel
 from electrode.models import Electrode
 from husbandry.models import Subject
@@ -50,7 +50,7 @@ class SortQualityMethod(Lookup):
     """ a method to quantify sort quality """
     pass
 
-class Unit(BroabUnit):
+class SortedUnit(Unit):
     """ a sorted unit """
     sort_quality = models.FloatField(null=True,blank=True)
     sort_quality_method = models.ForeignKey(SortQualityMethod,null=True,blank=True)

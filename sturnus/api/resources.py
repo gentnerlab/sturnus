@@ -3,7 +3,7 @@ from tastypie.resources import ModelResource
 from tastypie.authentication import BasicAuthentication
 from tastypie.authorization import DjangoAuthorization
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from operant.models import ProtocolType, Protocol, TrialSet, TrialClass, TrialType, Trial
+from operant.models import ProtocolType, Protocol, Session, TrialClass, TrialType, Trial
 from extracellular.models import CoordinateSystem, Penetration, Location, SortQualityMethod, Unit, Population
 from broab.api.resources import BroabResource
 
@@ -22,10 +22,62 @@ class ProtocolTypeResource(ModelResource):
         authentication = BasicAuthentication()
         authorization = DjangoAuthorization()
         
-class ProtocolResource(BroabResource):
+class ProtocolResource(ModelResource):
+    class Meta():
+        queryset = Protocol.objects.all()
+        resource_name = 'protocol'
+        filtering =  {
+            'id': ALL,
+            'name': ALL,
+            'description': ALL,
+        }
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
 
+class SessionResource(ModelResource):
+    class Meta():
+        queryset = Session.objects.all()
+        resource_name = 'session'
+        filtering =  {
+            'id': ALL,
+            'name': ALL,
+            'description': ALL,
+        }
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
 
-# extracellular
+class TrialClassResource(ModelResource):
+    class Meta():
+        queryset = TrialClass.objects.all()
+        resource_name = 'trial_class'
+        filtering =  {
+            'id': ALL,
+            'name': ALL,
+            'description': ALL,
+        }
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
 
+class TrialTypeResource(ModelResource):
+    class Meta():
+        queryset = TrialType.objects.all()
+        resource_name = 'trial_type'
+        filtering =  {
+            'id': ALL,
+            'name': ALL,
+            'description': ALL,
+        }
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()
 
-#
+class TrialResource(ModelResource):
+    class Meta():
+        queryset = Trial.objects.all()
+        resource_name = 'trial'
+        filtering =  {
+            'id': ALL,
+            'name': ALL,
+            'description': ALL,
+        }
+        authentication = BasicAuthentication()
+        authorization = DjangoAuthorization()

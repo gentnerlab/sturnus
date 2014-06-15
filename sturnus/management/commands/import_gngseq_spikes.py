@@ -1,11 +1,11 @@
-import quantities as pq
-from neo import io
-from neo import core
+# import quantities as pq
+# from neo import io
+# from neo import core
 from pytz import timezone
 from django.utils import timezone as tz
 from django.core.management.base import BaseCommand, CommandError
 from broab import models
-from extracellular.models import CoordinateSystem, Penetration, Location, Unit
+from extracellular.models import CoordinateSystem, Penetration, Location, SortedUnit
 from electrode.models import Electrode
 from husbandry.models import Subject
 
@@ -200,8 +200,8 @@ def create_spike_train_full(neo_spike_train,segment_id,unit_id=None):
 
 
 class Command(BaseCommand):
-    args = '<neo.h5>'
-    help = "imports the neo hdf5 file from one of justin's experiments"
+    args = '<spike2_export.mat>'
+    help = "imports the Spike2 exported mat file from st699 or st888"
     can_import_settings = True
     
     def handle(self, *args, **options):

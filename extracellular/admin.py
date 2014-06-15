@@ -1,5 +1,5 @@
 from django.contrib import admin
-from extracellular.models import CoordinateSystem, Penetration, Location, Unit, Population, SortQualityMethod
+from extracellular.models import CoordinateSystem, Penetration, Location, SortedUnit, Population, SortQualityMethod
 
 class CoordinateSystemAdmin(admin.ModelAdmin):
     list_display = ('name',)
@@ -98,11 +98,12 @@ class SortQualityMethodAdmin(admin.ModelAdmin):
         )
 admin.site.register(SortQualityMethod,SortQualityMethodAdmin)
 
-class UnitAdmin(admin.ModelAdmin):
+class SortedUnitAdmin(admin.ModelAdmin):
     list_filter = (
         'recording_channel_group__block',
         'sort_quality',
         'multiunit',
+        'population',
         )
     list_display = (
         'recording_channel_group',
@@ -142,7 +143,7 @@ class UnitAdmin(admin.ModelAdmin):
     readonly_fields = ('created','modified')
     class Media:
         js = ('/js/jquery.sparkline.min.js',)
-admin.site.register(Unit,UnitAdmin)
+admin.site.register(SortedUnit,SortedUnitAdmin)
 
 class PopulationAdmin(admin.ModelAdmin):
     fieldsets = (
